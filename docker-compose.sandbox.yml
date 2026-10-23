@@ -1,0 +1,51 @@
+name: founders-sandbox
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: founders_sandbox
+      POSTGRES_USER: sandbox
+      POSTGRES_PASSWORD: sandbox_isolated_testing_only
+    volumes: ["sandbox_db:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sandbox -d founders_sandbox"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  app:
+    image: founders-club-sandbox:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.sandbox
+    restart: unless-stopped
+    init: true
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["node", "-e", "process.env.AUTH_HASH_SECRET=require('node:crypto').randomBytes(32).toString('hex'); import('./dist/server/index.js')"]
+    environment:
+      NODE_ENV: development
+      PUBLIC_SANDBOX: "true"
+      SERVE_STATIC: "true"
+      APP_ORIGIN: ${SANDBOX_ORIGIN:?Set the temporary HTTPS origin}
+      PORT: 8787
+      DATABASE_URL: postgres://sandbox:sandbox_isolated_testing_only@db:5432/founders_sandbox
+      SESSION_COOKIE_NAME: fc_sandbox_session
+      LOCAL_AUTH_DEV_CODE: ""
+      PAYMENTS_MODE: mock
+      SEED_DEMO: "true"
+      TRUST_PROXY: 1
+      UPLOAD_DIR: /app/data/uploads
+    ports: ["127.0.0.1:8791:8787"]
+    volumes: ["sandbox_uploads:/app/data/uploads"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+volumes:
+  sandbox_db:
+  sandbox_uploads:

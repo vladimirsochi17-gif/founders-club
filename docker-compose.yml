@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: founders_club
+      POSTGRES_USER: founders
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-founders_local}
+    ports:
+      - "127.0.0.1:54329:5432"
+    volumes:
+      - founders_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U founders -d founders_club"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    restart: unless-stopped
+    init: true
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      SERVE_STATIC: "true"
+      PORT: 8787
+      APP_ORIGIN: http://localhost:8787
+      DATABASE_URL: postgres://founders:founders_local@db:5432/founders_club
+      SESSION_COOKIE_NAME: fc_session
+      SESSION_TTL_DAYS: 30
+      AUTH_HASH_SECRET: ${AUTH_HASH_SECRET:-development-only-secret-change-me}
+      LOCAL_AUTH_DEV_CODE: ${LOCAL_AUTH_DEV_CODE:-123456}
+      PAYMENTS_MODE: mock
+      SEED_DEMO: ${SEED_DEMO:-true}
+      FOUNDER_PROJECT_LIMIT: 1
+      PLUS_PROJECT_LIMIT: 3
+      UPLOAD_DIR: /app/data/uploads
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-Founders Club <noreply@example.com>}
+      TRUST_PROXY: 0
+    ports:
+      - "127.0.0.1:8787:8787"
+    volumes:
+      - founders_uploads:/app/data/uploads
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  founders_db:
+  founders_uploads:

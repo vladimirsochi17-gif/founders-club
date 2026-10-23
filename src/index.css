@@ -1,0 +1,38 @@
+@import '@fontsource-variable/inter';
+
+:root {
+  color: #20211f;
+  background: #f8f6f2;
+  font-family: 'Inter Variable', Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Use the bundled variable font, not an unrelated system font named Inter. */
+.fc-app,
+.fc-app h1,
+.fc-app h2,
+.fc-app h3,
+.fc-app h4,
+.fc-app kbd {
+  font-family: 'Inter Variable', Arial, sans-serif;
+}
+.fc-app .hero-copy h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.fc-app .table-wrap { overflow-x: auto; }
+.fc-app .project-info, .fc-app .account-main { min-width: 0; }
+.fc-app .project-info p { overflow-wrap: anywhere; }

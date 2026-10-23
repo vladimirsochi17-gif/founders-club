@@ -1,0 +1,58 @@
+{
+  "revision": "464041619608440832",
+  "colorsAndEffects": {
+    "--fc-canvas": "#f8f6f2",
+    "--fc-surface": "#fff",
+    "--fc-muted-surface": "#f0ece6",
+    "--fc-ink": "#20211f",
+    "--fc-muted": "#6d6b67",
+    "--fc-border": "#e5e1d9",
+    "--fc-primary": "#181918",
+    "--fc-accent": "#b28a58",
+    "--fc-danger": "#ab4d45",
+    "--fc-positive": "#32765c",
+    "--fc-radius": "12px",
+    "--fc-shadow": "0 8px 30px rgba(25,25,25,.05)",
+    "--fc-ease": "cubic-bezier(.2,.75,.25,1)"
+  },
+  "typography": {
+    "ui": "Inter, Arial, sans-serif",
+    "display": "Georgia, Times New Roman, serif",
+    "bodyPx": 14,
+    "helperPx": 12,
+    "primaryButtonPx": 14
+  },
+  "qaWidths": [
+    320,
+    360,
+    390,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "components": [
+    "Button",
+    "Action",
+    "Link",
+    "Field",
+    "Check",
+    "Toggle",
+    "Tabs",
+    "ModalFrame",
+    "Notice",
+    "Empty",
+    "ProductCard",
+    "ResourceCard",
+    "Table",
+    "Accordion"
+  ],
+  "motion": {
+    "pageMs": 180,
+    "interactiveMs": [
+      90,
+      150
+    ],
+    "reducedMotion": "All animations/transitions disabled by prefers-reduced-motion"
+  }
+}

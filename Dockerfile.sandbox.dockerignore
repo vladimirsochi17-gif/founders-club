@@ -1,0 +1,7 @@
+**
+!dist
+!dist/**
+!server
+!server/db
+!server/db/migrations
+!server/db/migrations/**

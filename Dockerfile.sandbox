@@ -1,0 +1,5 @@
+# Reuse the already installed Linux dependencies from the local app image.
+# Run npm run build before building this image. No registry access is needed.
+FROM founders-club-app:latest
+COPY dist /app/dist
+COPY server/db/migrations /app/server/db/migrations
